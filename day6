@@ -1,0 +1,107 @@
+strSQL = "SELECT * FROM users WHERE (name = '" + userName + "') and (pw = '"+ passWord +"');"
+恶意填入
+userName = "'1' OR '1'='1'";
+passWord = "'1' OR '1'='1'"; 
+Introduction to SQL injection and XSS attack
+by GongJie
+what is SQL ?? 
+结构化查询语言 (Structured Query Language)
+是一种特殊目的的编程语言，是一种数据库查询和程序设计语言，用于存取数据以及查询、更新和管理关系数据库系统
+SQLI最早出现在1999年，Web史上的一个里程碑
+what is XSS ?? 
+跨站脚本攻击(Cross Site Scripting)
+恶意攻击者往Web页面里插入恶意html代码，当用户浏览该页之时，嵌入其中Web里面的html代码会被执行 XSS出现和SQLI时间差不多，为另一个里程碑，流行却在2003年以后。
+标志为MySpace蠕虫事件。
+Let's talk about
+SQL注入
+* 本次演示只用做学习交流使用
+是发生于应用程序之数据库层的安全漏洞。简而言之，是在输入的字符串之中注入SQL指令，在设计不良的程序当中忽略了检查，那么这些注入进去的指令就会被数据库服务器误认为是正常的SQL指令而运行，因此遭到破坏或是入侵。
+产生原因：
+- 在应用程序中使用字符串联结方式组合SQL指令。
+- 在应用程序链接数据库时使用权限过大的账户
+- 在数据库中开放了不必要但权力过大的功能
+- 太过于信任用户所输入的数据，未限制输入的字元数，以及未对用户输入的数据做潜在指令的检查。
+作用原理:
+- SQL命令可查询、插入 、 更新、删除等，命令的串接。而以分号字元为不同命令的区别。（原本的作用是用于SubQuery或作为查询、插入、更新、删除……等的条件式） 
+SQL命令对于传入的字符串参数是用单引号字元所包起来。 如果在组合SQL的命令字符串时，未针对单引号字元作取代处理的话，将导致该字元变数在填入命令字符串时，被恶意窜改原本的SQL语法的作用。
+想不想
+DIY
+一下呢
+我们还是先看看大神的操作吧
+神奇的车牌 drop database
+strSQL = "SELECT * FROM users WHERE (name = '" + userName + "') and (pw = '"+ passWord +"');" 恶意填入
+userName = "'1' OR '1'='1'";
+passWord = "'1' OR '1'='1'"; 
+strSQL = "SELECT * FROM users WHERE (name = '1' OR '1'='1') and (pw = '1' OR ‘1'='1');"
+SQL命令会变成下面这样的 
+strSQL = "SELECT * FROM users;” 因此达到无账号密码，亦可登录网站。所以SQL注入攻击被俗称为黑客的填空游戏。  一些技巧 
+空格被过滤我们就换用tab好了。tab的Ascii码是%09
+tab被过滤了，用注释/**/当空格用就可以
+需要以数字结尾， 加上#123
+全部转化为ASC码 %0A%20or%201=1#123
+…
+XSS攻击
+非持久型攻击
+持久型攻击
+非持久型攻击
+顾名思义， 非持久型xss攻击是一次性的， 仅对当次的页面访问产生影响。 非持久型xss攻击要求用户访问一个被攻击者篡改后的链接，用户访问该链接时， 被植入的攻击脚本被用户游览器执行，从而达到攻击目的。
+input.php
+<?php $name = $_GET['name'];
+echo "Welcome $name<br>";
+echo "<a href="http:// www.baidu.com/"> Click to Download</a>";
+?>
+Introduction to SQL injection and XSS attack
+by GongJie
+what is SQL ?? 
+结构化查询语言 (Structured Query Language)
+是一种特殊目的的编程语言，是一种数据库查询和程序设计语言，用于存取数据以及查询、更新和管理关系数据库系统
+SQLI最早出现在1999年，Web史上的一个里程碑
+what is XSS ?? 
+跨站脚本攻击(Cross Site Scripting)
+恶意攻击者往Web页面里插入恶意html代码，当用户浏览该页之时，嵌入其中Web里面的html代码会被执行 XSS出现和SQLI时间差不多，为另一个里程碑，流行却在2003年以后。
+标志为MySpace蠕虫事件。
+Let's talk about
+SQL注入
+* 本次演示只用做学习交流使用
+是发生于应用程序之数据库层的安全漏洞。简而言之，是在输入的字符串之中注入SQL指令，在设计不良的程序当中忽略了检查，那么这些注入进去的指令就会被数据库服务器误认为是正常的SQL指令而运行，因此遭到破坏或是入侵。
+产生原因：
+- 在应用程序中使用字符串联结方式组合SQL指令。
+- 在应用程序链接数据库时使用权限过大的账户
+- 在数据库中开放了不必要但权力过大的功能
+- 太过于信任用户所输入的数据，未限制输入的字元数，以及未对用户输入的数据做潜在指令的检查。
+作用原理:
+- SQL命令可查询、插入 、 更新、删除等，命令的串接。而以分号字元为不同命令的区别。（原本的作用是用于SubQuery或作为查询、插入、更新、删除……等的条件式） 
+SQL命令对于传入的字符串参数是用单引号字元所包起来。 如果在组合SQL的命令字符串时，未针对单引号字元作取代处理的话，将导致该字元变数在填入命令字符串时，被恶意窜改原本的SQL语法的作用。
+想不想
+DIY
+一下呢
+我们还是先看看大神的操作吧
+神奇的车牌 drop database
+strSQL = "SELECT * FROM users WHERE (name = '" + userName + "') and (pw = '"+ passWord +"');" 恶意填入
+userName = "'1' OR '1'='1'";
+passWord = "'1' OR '1'='1'"; 
+strSQL = "SELECT * FROM users WHERE (name = '1' OR '1'='1') and (pw = '1' OR ‘1'='1');"
+SQL命令会变成下面这样的 
+strSQL = "SELECT * FROM users;” 因此达到无账号密码，亦可登录网站。所以SQL注入攻击被俗称为黑客的填空游戏。  一些技巧 
+空格被过滤我们就换用tab好了。tab的Ascii码是%09
+tab被过滤了，用注释/**/当空格用就可以
+需要以数字结尾， 加上#123
+全部转化为ASC码 %0A%20or%201=1#123
+…
+XSS攻击
+非持久型攻击
+持久型攻击
+非持久型攻击
+顾名思义， 非持久型xss攻击是一次性的， 仅对当次的页面访问产生影响。 非持久型xss攻击要求用户访问一个被攻击者篡改后的链接，用户访问该链接时， 被植入的攻击脚本被用户游览器执行，从而达到攻击目的。
+input.php
+<?php $name = $_GET['name'];
+echo "Welcome $name<br>";
+echo "<a href="http:// www.baidu.com/"> Click to Download</a>";
+?> 该页面显示两行信息：
+从URI获取 'name' 参数，并在页面显示
+显示跳转到一条URL的链接
+恶意注入：
+index.php?name=guest<script>alert('attacked')</script>
+返回的结果：
+Welcome guest <script>alert('attacked')</script> <br> <a href=‘http://www.baidu.com/'>Click to Download</a>
+
